@@ -68,7 +68,7 @@ private object NativeColorSchemeStore {
         context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
             .edit()
             .putString(PREFERENCE_KEY, preference)
-            .apply()
+            .commit()
 
         applyPreference(context, preference)
     }
