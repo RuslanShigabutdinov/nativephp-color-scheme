@@ -2,6 +2,11 @@
 
 NativePHP Mobile plugin for reading and controlling the app color scheme from native Android and iOS code.
 
+## Platform Status
+
+- Android: tested on device.
+- iOS: implemented, but still needs device/simulator validation.
+
 It supports three user preferences:
 
 - `system`
@@ -15,9 +20,62 @@ The effective color scheme is always:
 
 When the preference is `system`, the effective color scheme follows the native runtime's current system appearance.
 
+## Requirements
+
+- PHP 8.3+
+- NativePHP Mobile 3.3+
+- Android API 21+
+- iOS 15+
+
 ## Installation
 
-Until this package is published on Packagist, install it from GitHub as a VCS repository.
+Install the package:
+
+```bash
+composer require ruslanshigabutdinov/nativephp-color-scheme
+```
+
+Publish the NativePHP plugin provider if your app does not have one yet:
+
+```bash
+php artisan vendor:publish --tag=nativephp-plugins-provider
+```
+
+Register the plugin:
+
+```bash
+php artisan native:plugin:register ruslanshigabutdinov/nativephp-color-scheme
+```
+
+Verify that NativePHP sees the plugin:
+
+```bash
+php artisan native:plugin:list
+```
+
+You should see:
+
+```text
+NativeColorScheme.Get
+NativeColorScheme.SetPreference
+```
+
+Because this package contains native Kotlin and Swift code, rebuild your NativePHP app after installation:
+
+```bash
+php artisan native:run
+```
+
+For a full native project refresh:
+
+```bash
+php artisan native:install --force
+php artisan native:run
+```
+
+## GitHub Development Install
+
+If the package is not available on Packagist yet, install it from GitHub as a VCS repository.
 
 Add the repository to your app's `composer.json`:
 
@@ -38,18 +96,6 @@ Then require the package:
 composer require ruslanshigabutdinov/nativephp-color-scheme:dev-main
 ```
 
-Publish the NativePHP plugin provider if your app does not have one yet:
-
-```bash
-php artisan vendor:publish --tag=nativephp-plugins-provider
-```
-
-Register the plugin:
-
-```bash
-php artisan native:plugin:register ruslanshigabutdinov/nativephp-color-scheme
-```
-
 ## Usage
 
 ```php
@@ -57,9 +103,12 @@ use RuslanShigabutdinov\NativeColorScheme\Facades\NativeColorScheme;
 
 NativeColorScheme::getPreference();  // 'system', 'light', 'dark', or null
 NativeColorScheme::getColorScheme(); // effective 'light', 'dark', or null
+NativeColorScheme::getSystemColorScheme(); // system 'light', 'dark', or null
 NativeColorScheme::get();            // alias for getColorScheme()
 
 NativeColorScheme::isSystem(); // true when preference is system
+NativeColorScheme::isSystemDark();
+NativeColorScheme::isSystemLight();
 NativeColorScheme::isDark();   // true when effective scheme is dark
 NativeColorScheme::isLight();  // true when effective scheme is light
 ```
@@ -117,12 +166,20 @@ nativephp_call('NativeColorScheme.SetPreference', '{"preference":"dark"}');
 The methods are declared in `nativephp.json`:
 
 ```json
-{
-    "name": "NativeColorScheme.Get",
-    "android": "com.ruslanshigabutdinov.nativecolorscheme.NativeColorSchemeFunctions.Get",
-    "android_params": ["context"],
-    "ios": "NativeColorSchemeFunctions.Get"
-}
+[
+    {
+        "name": "NativeColorScheme.Get",
+        "android": "com.ruslanshigabutdinov.nativecolorscheme.NativeColorSchemeFunctions.Get",
+        "android_params": ["context"],
+        "ios": "NativeColorSchemeFunctions.Get"
+    },
+    {
+        "name": "NativeColorScheme.SetPreference",
+        "android": "com.ruslanshigabutdinov.nativecolorscheme.NativeColorSchemeFunctions.SetPreference",
+        "android_params": ["context"],
+        "ios": "NativeColorSchemeFunctions.SetPreference"
+    }
+]
 ```
 
 During a NativePHP mobile build, NativePHP:
@@ -131,7 +188,7 @@ During a NativePHP mobile build, NativePHP:
 2. Checks that the plugin service provider is listed in `NativeServiceProvider::plugins()`.
 3. Reads `nativephp.json`.
 4. Copies the Android Kotlin and iOS Swift source files into the generated native projects.
-5. Generates bridge registration code so `NativeColorScheme.Get` is callable from PHP.
+5. Generates bridge registration code so `NativeColorScheme.Get` and `NativeColorScheme.SetPreference` are callable from PHP.
 
 On Android, the plugin reads:
 
@@ -140,6 +197,8 @@ context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 ```
 
 It stores the user preference with `SharedPreferences`. On Android 12/API 31 and newer it also calls `UiModeManager#setApplicationNightMode(...)`, which lets Android persist app-local night mode and helps Android's native splash screen choose the matching `-night` resources on cold launch.
+
+On Android 11/API 30 and older, the preference is still stored and returned by the plugin, but app-level splash/night-mode control is limited by the platform.
 
 On iOS, the plugin reads:
 
@@ -189,6 +248,21 @@ if (NativeColorScheme::isDark()) {
 Android can persist an app-local night mode through `UiModeManager#setApplicationNightMode(...)` on API 31+. This is the path that can affect Android's native splash resource selection.
 
 iOS launch screens are shown before app code can fully run. The plugin applies the saved preference as early as NativePHP plugin initialization allows, but the first system launch screen may still follow the device appearance. For iOS, use a launch image that works acceptably in both modes, or show an in-app splash immediately after launch.
+
+## Development Tip
+
+During NativePHP development, setting your app version to `DEBUG` helps force bundle extraction while testing package changes:
+
+```env
+NATIVEPHP_APP_VERSION=DEBUG
+```
+
+If a native bridge change does not appear on device, rebuild the native project:
+
+```bash
+php artisan native:install --force
+php artisan native:run
+```
 
 ## Local Development
 
