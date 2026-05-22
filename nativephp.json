@@ -1,0 +1,40 @@
+{
+    "namespace": "NativeColorScheme",
+    "bridge_functions": [
+        {
+            "name": "NativeColorScheme.Get",
+            "android": "com.ruslanshigabutdinov.nativecolorscheme.NativeColorSchemeFunctions.Get",
+            "android_params": ["context"],
+            "ios": "NativeColorSchemeFunctions.Get",
+            "description": "Get the current OS color scheme."
+        }
+    ],
+    "android": {
+        "min_version": 21,
+        "permissions": [],
+        "repositories": [],
+        "dependencies": {
+            "implementation": []
+        },
+        "activities": [],
+        "services": [],
+        "receivers": [],
+        "providers": []
+    },
+    "ios": {
+        "min_version": "15.0",
+        "permissions": [],
+        "repositories": [],
+        "dependencies": {
+            "swift_packages": [],
+            "pods": []
+        }
+    },
+    "assets": {
+        "android": [],
+        "ios": []
+    },
+    "events": [],
+    "hooks": [],
+    "secrets": []
+}

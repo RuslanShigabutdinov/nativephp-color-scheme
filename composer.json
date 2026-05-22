@@ -1,0 +1,46 @@
+{
+    "name": "ruslanshigabutdinov/nativephp-color-scheme",
+    "description": "NativePHP Mobile plugin for reading the device OS color scheme.",
+    "type": "nativephp-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ruslan Shigabutdinov",
+            "email": "SaylerPLay@gmail.com"
+        }
+    ],
+    "keywords": [
+        "nativephp",
+        "nativephp-mobile",
+        "ios",
+        "android",
+        "dark-mode",
+        "color-scheme"
+    ],
+    "homepage": "https://github.com/RuslanShigabutdinov/nativephp-color-scheme",
+    "support": {
+        "issues": "https://github.com/RuslanShigabutdinov/nativephp-color-scheme/issues",
+        "source": "https://github.com/RuslanShigabutdinov/nativephp-color-scheme"
+    },
+    "require": {
+        "php": "^8.3",
+        "nativephp/mobile": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "RuslanShigabutdinov\\NativeColorScheme\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RuslanShigabutdinov\\NativeColorScheme\\NativeColorSchemeServiceProvider"
+            ]
+        },
+        "nativephp": {
+            "manifest": "nativephp.json"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
