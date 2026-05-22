@@ -1,6 +1,6 @@
 {
     "name": "ruslanshigabutdinov/nativephp-color-scheme",
-    "description": "NativePHP Mobile plugin for reading the device OS color scheme.",
+    "description": "NativePHP Mobile plugin for reading and controlling the app color scheme.",
     "type": "nativephp-plugin",
     "license": "MIT",
     "authors": [
