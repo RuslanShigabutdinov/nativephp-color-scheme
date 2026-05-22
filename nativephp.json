@@ -6,11 +6,19 @@
             "android": "com.ruslanshigabutdinov.nativecolorscheme.NativeColorSchemeFunctions.Get",
             "android_params": ["context"],
             "ios": "NativeColorSchemeFunctions.Get",
-            "description": "Get the current OS color scheme."
+            "description": "Get the current color scheme state."
+        },
+        {
+            "name": "NativeColorScheme.SetPreference",
+            "android": "com.ruslanshigabutdinov.nativecolorscheme.NativeColorSchemeFunctions.SetPreference",
+            "android_params": ["context"],
+            "ios": "NativeColorSchemeFunctions.SetPreference",
+            "description": "Persist and apply the app color scheme preference."
         }
     ],
     "android": {
         "min_version": 21,
+        "init_function": "com.ruslanshigabutdinov.nativecolorscheme.initializeNativeColorScheme",
         "permissions": [],
         "repositories": [],
         "dependencies": {
@@ -23,6 +31,7 @@
     },
     "ios": {
         "min_version": "15.0",
+        "init_function": "NativeColorSchemeFunctions.initialize",
         "permissions": [],
         "repositories": [],
         "dependencies": {
