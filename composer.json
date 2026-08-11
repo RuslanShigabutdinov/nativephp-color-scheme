@@ -19,12 +19,13 @@
     ],
     "homepage": "https://github.com/RuslanShigabutdinov/nativephp-color-scheme",
     "support": {
+        "email": "russhigwork@gmail.com",
         "issues": "https://github.com/RuslanShigabutdinov/nativephp-color-scheme/issues",
         "source": "https://github.com/RuslanShigabutdinov/nativephp-color-scheme"
     },
     "require": {
         "php": "^8.3",
-        "nativephp/mobile": "^3.3"
+        "nativephp/mobile": "^3.3|^4.0"
     },
     "autoload": {
         "psr-4": {
